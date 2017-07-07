@@ -31,3 +31,8 @@ type AnimeListItem struct {
 	MyLastUpdated     string        `json:"my_last_updated" xml:"my_last_updated"`
 	MyTags            []interface{} `json:"my_tags" xml:"my_tags"`
 }
+
+// AnimeLink ...
+func (item *AnimeListItem) AnimeLink() string {
+	return "https://myanimelist.net/anime/" + item.AnimeID
+}
