@@ -8,8 +8,8 @@ import (
 
 // AnimeList ...
 type AnimeList struct {
-	Myinfo *User    `json:"myinfo" xml:"myinfo"`
-	Anime  []*Anime `json:"anime" xml:"anime"`
+	Myinfo *User            `json:"myinfo" xml:"myinfo"`
+	Items  []*AnimeListItem `json:"anime" xml:"anime"`
 }
 
 // GetAnimeList returns the user's anime list.

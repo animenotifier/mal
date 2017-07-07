@@ -1,16 +1,25 @@
 package mal
 
-// Anime ...
-type Anime struct {
-	SeriesAnimedbID   string        `json:"series_animedb_id" xml:"series_animedb_id"`
-	SeriesTitle       string        `json:"series_title" xml:"series_title"`
-	SeriesSynonyms    string        `json:"series_synonyms" xml:"series_synonyms"`
-	SeriesType        string        `json:"series_type" xml:"series_type"`
-	SeriesEpisodes    string        `json:"series_episodes" xml:"series_episodes"`
-	SeriesStatus      string        `json:"series_status" xml:"series_status"`
-	SeriesStart       string        `json:"series_start" xml:"series_start"`
-	SeriesEnd         string        `json:"series_end" xml:"series_end"`
-	SeriesImage       string        `json:"series_image" xml:"series_image"`
+// AnimeListStatus values for anime list items
+const (
+	AnimeListStatusWatching  = "1"
+	AnimeListStatusCompleted = "2"
+	AnimeListStatusPlanned   = "6"
+	AnimeListStatusHold      = "3"
+	AnimeListStatusDropped   = "4"
+)
+
+// AnimeListItem ...
+type AnimeListItem struct {
+	AnimeID           string        `json:"series_animedb_id" xml:"series_animedb_id"`
+	AnimeTitle        string        `json:"series_title" xml:"series_title"`
+	AnimeSynonyms     string        `json:"series_synonyms" xml:"series_synonyms"`
+	AnimeType         string        `json:"series_type" xml:"series_type"`
+	AnimeEpisodes     string        `json:"series_episodes" xml:"series_episodes"`
+	AnimeStatus       string        `json:"series_status" xml:"series_status"`
+	AnimeStart        string        `json:"series_start" xml:"series_start"`
+	AnimeEnd          string        `json:"series_end" xml:"series_end"`
+	AnimeImage        string        `json:"series_image" xml:"series_image"`
 	MyID              string        `json:"my_id" xml:"my_id"`
 	MyWatchedEpisodes string        `json:"my_watched_episodes" xml:"my_watched_episodes"`
 	MyStartDate       string        `json:"my_start_date" xml:"my_start_date"`
