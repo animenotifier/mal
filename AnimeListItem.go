@@ -26,7 +26,7 @@ type AnimeListItem struct {
 	MyFinishDate      string        `json:"my_finish_date" xml:"my_finish_date"`
 	MyScore           string        `json:"my_score" xml:"my_score"`
 	MyStatus          string        `json:"my_status" xml:"my_status"`
-	MyRewatching      []interface{} `json:"my_rewatching" xml:"my_rewatching"`
+	MyRewatching      string        `json:"my_rewatching" xml:"my_rewatching"`
 	MyRewatchingEp    string        `json:"my_rewatching_ep" xml:"my_rewatching_ep"`
 	MyLastUpdated     string        `json:"my_last_updated" xml:"my_last_updated"`
 	MyTags            []interface{} `json:"my_tags" xml:"my_tags"`
