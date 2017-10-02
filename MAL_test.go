@@ -1,7 +1,6 @@
 package mal
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,9 +11,7 @@ func TestAnimeList(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, animeList)
-	assert.NotNil(t, animeList.Items)
-
-	fmt.Println(len(animeList.Items), "anime")
+	assert.NotEmpty(t, animeList.Items)
 
 	for _, item := range animeList.Items {
 		assert.NotEmpty(t, item.AnimeID)
