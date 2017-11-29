@@ -9,7 +9,10 @@ import (
 	"github.com/animenotifier/mal"
 )
 
-var malAnimeIDRegEx = regexp.MustCompile(`myanimelist.net/anime/(\d+)`)
+var (
+	malAnimeIDRegEx    = regexp.MustCompile(`myanimelist.net/anime/(\d+)`)
+	malProducerIDRegEx = regexp.MustCompile(`/anime/producer/(\d+)`)
+)
 
 // ParseAnime ...
 func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
@@ -50,39 +53,38 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 			})
 
 		case "Studios":
-			s.Siblings().Each(func(i int, s *goquery.Selection) {
-				text := s.Text()
-
-				if text == "add some" {
-					return
-				}
-
-				anime.Studios = append(anime.Studios, text)
-			})
+			s.Siblings().Each(producerHandler(&anime.Studios))
 
 		case "Producers":
-			s.Siblings().Each(func(i int, s *goquery.Selection) {
-				text := s.Text()
-
-				if text == "add some" {
-					return
-				}
-
-				anime.Producers = append(anime.Producers, text)
-			})
+			s.Siblings().Each(producerHandler(&anime.Producers))
 
 		case "Licensors":
-			s.Siblings().Each(func(i int, s *goquery.Selection) {
-				text := s.Text()
-
-				if text == "add some" {
-					return
-				}
-
-				anime.Licensors = append(anime.Licensors, text)
-			})
+			s.Siblings().Each(producerHandler(&anime.Licensors))
 		}
 	})
 
 	return anime, nil
+}
+
+func producerHandler(slice *[]*mal.Producer) func(int, *goquery.Selection) {
+	return func(i int, s *goquery.Selection) {
+		text := s.Text()
+
+		if text == "add some" {
+			return
+		}
+
+		id := ""
+		url := s.AttrOr("href", "")
+		matches := malProducerIDRegEx.FindStringSubmatch(url)
+
+		if len(matches) > 1 {
+			id = matches[1]
+		}
+
+		*slice = append(*slice, &mal.Producer{
+			ID:   id,
+			Name: text,
+		})
+	}
 }

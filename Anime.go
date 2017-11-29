@@ -5,7 +5,7 @@ type Anime struct {
 	ID        string
 	URL       string
 	Genres    []string
-	Studios   []string
-	Producers []string
-	Licensors []string
+	Studios   []*Producer
+	Producers []*Producer
+	Licensors []*Producer
 }
