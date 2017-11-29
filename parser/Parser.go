@@ -1,13 +1,15 @@
 package malparser
 
 import (
-	"fmt"
 	"io"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/animenotifier/mal"
 )
+
+var malAnimeIDRegEx = regexp.MustCompile(`myanimelist.net/anime/(\d+)`)
 
 // ParseAnime ...
 func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
@@ -22,7 +24,12 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 	// Find ID
 	document.Find("#horiznav_nav ul li a").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "Details" {
-			fmt.Println(s)
+			anime.URL = s.AttrOr("href", "")
+			matches := malAnimeIDRegEx.FindStringSubmatch(anime.URL)
+
+			if len(matches) > 1 {
+				anime.ID = matches[1]
+			}
 		}
 	})
 
