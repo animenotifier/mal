@@ -108,7 +108,11 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 			aired = strings.TrimSpace(aired)
 			parts := strings.Split(aired, " to ")
 			startDate := parts[0]
-			endDate := parts[1]
+			endDate := ""
+
+			if len(parts) > 1 {
+				endDate = parts[1]
+			}
 
 			if startDate == "?" {
 				startDate = ""
