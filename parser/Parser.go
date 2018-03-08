@@ -3,6 +3,7 @@ package malparser
 import (
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ const malDateFormat = "Jan _2, 2006"
 var (
 	malAnimeIDRegEx    = regexp.MustCompile(`myanimelist.net/anime/(\d+)`)
 	malProducerIDRegEx = regexp.MustCompile(`/anime/producer/(\d+)`)
+	sourceRegex        = regexp.MustCompile(`\(Source: (.*?)\)`)
+	writtenByRegex     = regexp.MustCompile(`\[Written by (.*?)\]`)
 )
 
 // ParseAnime ...
@@ -41,8 +44,22 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 
 	// Find description from og:description tag
 	document.Find("meta[property='og:description']").Each(func(i int, s *goquery.Selection) {
-		anime.Synopsis = s.AttrOr("content", "")
+		synopsis := s.AttrOr("content", "")
+		matches := writtenByRegex.FindStringSubmatch(synopsis)
+
+		if len(matches) >= 2 {
+			anime.SynopsisSource = matches[1]
+		}
+
+		synopsis = writtenByRegex.ReplaceAllString(synopsis, "")
+		synopsis = strings.TrimSpace(synopsis)
+		anime.Synopsis = synopsis
 	})
+
+	// Title
+	title := document.Find("h1.h1 span[itemprop='name']").Text()
+	title = strings.TrimSpace(title)
+	anime.Title = title
 
 	// Information
 	document.Find(".dark_text").Each(func(i int, s *goquery.Selection) {
@@ -60,10 +77,31 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 				anime.Genres = append(anime.Genres, text)
 			})
 
+		case "English":
+			anime.EnglishTitle = darkTextValue(s)
+
+		case "Japanese":
+			anime.JapaneseTitle = darkTextValue(s)
+
+		case "Synonyms":
+			anime.Synonyms = strings.Split(darkTextValue(s), ", ")
+
+		case "Episodes":
+			text := darkTextValue(s)
+			number, err := strconv.Atoi(text)
+
+			if err == nil {
+				anime.EpisodeCount = number
+			}
+
+		case "Status":
+			anime.Status = darkTextValue(s)
+
 		case "Source":
-			source := s.Parent().Contents().Not(".dark_text").Text()
-			source = strings.TrimSpace(source)
-			anime.Source = source
+			anime.Source = darkTextValue(s)
+
+		case "Rating":
+			anime.Rating = darkTextValue(s)
 
 		case "Aired":
 			aired := s.Parent().Contents().Not(".dark_text").Text()
@@ -104,6 +142,12 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 	})
 
 	return anime, nil
+}
+
+func darkTextValue(s *goquery.Selection) string {
+	text := s.Parent().Contents().Not(".dark_text").Text()
+	text = strings.TrimSpace(text)
+	return text
 }
 
 func producerHandler(slice *[]*mal.Producer) func(int, *goquery.Selection) {
