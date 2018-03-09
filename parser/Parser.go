@@ -95,7 +95,21 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 			}
 
 		case "Status":
-			anime.Status = darkTextValue(s)
+			status := darkTextValue(s)
+
+			switch status {
+			case "Finished Airing":
+				anime.Status = "finished"
+
+			case "Currently Airing":
+				anime.Status = "current"
+
+			case "Not yet aired":
+				anime.Status = "upcoming"
+
+			default:
+				anime.Status = status
+			}
 
 		case "Source":
 			anime.Source = darkTextValue(s)
