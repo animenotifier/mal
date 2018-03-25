@@ -54,6 +54,11 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 		synopsis = writtenByRegex.ReplaceAllString(synopsis, "")
 		synopsis = strings.TrimSpace(synopsis)
 		anime.Synopsis = synopsis
+
+		// Remove fake synopsis
+		if strings.HasPrefix(anime.Synopsis, "Looking for information on ") {
+			anime.Synopsis = ""
+		}
 	})
 
 	// Title
