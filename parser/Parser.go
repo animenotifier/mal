@@ -105,7 +105,7 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 				anime.Status = "current"
 
 			case "Not yet aired":
-				anime.Status = "upcoming"
+				anime.Status = "tba"
 
 			default:
 				anime.Status = status
@@ -140,6 +140,10 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 
 			if err == nil {
 				anime.StartDate = startTime.Format("2006-01-02")
+
+				if anime.Status == "tba" {
+					anime.Status = "upcoming"
+				}
 			}
 
 			endTime, err := time.Parse(malDateFormat, endDate)
