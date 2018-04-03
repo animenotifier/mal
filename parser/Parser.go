@@ -127,8 +127,9 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 
 		case "Source":
 			anime.Source = darkTextValue(s)
+			anime.Source = strings.ToLower(anime.Source)
 
-			if anime.Source == "Unknown" {
+			if anime.Source == "unknown" {
 				anime.Source = ""
 			}
 
