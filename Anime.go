@@ -16,6 +16,7 @@ type Anime struct {
 	StartDate      string
 	EndDate        string
 	EpisodeCount   int
+	EpisodeLength  int
 	Genres         []string
 	Studios        []*Producer
 	Producers      []*Producer

@@ -82,6 +82,15 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 				anime.Genres = append(anime.Genres, text)
 			})
 
+		case "Duration":
+			duration := darkTextValue(s)
+			duration = strings.TrimSuffix(duration, " min. per ep.")
+			episodeLength, err := strconv.Atoi(duration)
+
+			if err == nil {
+				anime.EpisodeLength = episodeLength
+			}
+
 		case "English":
 			anime.EnglishTitle = darkTextValue(s)
 
