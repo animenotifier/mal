@@ -1,6 +1,7 @@
 package malparser
 
 import (
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -29,6 +30,45 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 	}
 
 	anime := &mal.Anime{}
+
+	// Title
+	title := document.Find("h1.h1 span[itemprop='name']").Text()
+	title = strings.TrimSpace(title)
+	anime.Title = title
+
+	// Characters
+	document.Find("div.detail-characters-list > div > table > tbody > tr").Each(func(i int, s *goquery.Selection) {
+		children := s.Children()
+
+		// Disregard staff fields
+		if children.Length() != 3 {
+			return
+		}
+
+		image := children.Eq(0).Find("img")
+		info := children.Eq(1)
+		// voiceActor := children.Eq(2)
+
+		imgSrc := image.AttrOr("data-src", "")
+		imgSrc = strings.Replace(imgSrc, "/r/23x32", "", 1)
+		queryPos := strings.Index(imgSrc, "?s")
+
+		if queryPos != -1 {
+			imgSrc = imgSrc[:queryPos]
+		}
+
+		link := info.Find("a")
+		name := link.Text()
+		url := link.AttrOr("href", "")
+		id := strings.TrimPrefix(url, "https://myanimelist.net/character/")
+		slashPos := strings.Index(id, "/")
+
+		if slashPos != -1 {
+			id = id[:slashPos]
+		}
+
+		fmt.Println(i, id, "|", name, "|", imgSrc)
+	})
 
 	// Find ID
 	document.Find("#horiznav_nav ul li a").Each(func(i int, s *goquery.Selection) {
@@ -60,11 +100,6 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 			anime.Synopsis = ""
 		}
 	})
-
-	// Title
-	title := document.Find("h1.h1 span[itemprop='name']").Text()
-	title = strings.TrimSpace(title)
-	anime.Title = title
 
 	// Information
 	document.Find(".dark_text").Each(func(i int, s *goquery.Selection) {
