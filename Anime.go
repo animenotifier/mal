@@ -21,4 +21,5 @@ type Anime struct {
 	Studios        []*Producer
 	Producers      []*Producer
 	Licensors      []*Producer
+	Characters     []*AnimeCharacter
 }

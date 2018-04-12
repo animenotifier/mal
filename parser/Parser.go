@@ -22,14 +22,15 @@ var (
 )
 
 // ParseAnime ...
-func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
+func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 	document, err := goquery.NewDocumentFromReader(htmlReader)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	anime := &mal.Anime{}
+	characters := []*mal.Character{}
 
 	// Title
 	title := document.Find("h1.h1 span[itemprop='name']").Text()
@@ -49,14 +50,7 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 		info := children.Eq(1)
 		// voiceActor := children.Eq(2)
 
-		imgSrc := image.AttrOr("data-src", "")
-		imgSrc = strings.Replace(imgSrc, "/r/23x32", "", 1)
-		queryPos := strings.Index(imgSrc, "?s")
-
-		if queryPos != -1 {
-			imgSrc = imgSrc[:queryPos]
-		}
-
+		// ID, link and name
 		link := info.Find("a")
 		name := link.Text()
 		url := link.AttrOr("href", "")
@@ -67,7 +61,43 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 			id = id[:slashPos]
 		}
 
-		fmt.Println(i, id, "|", name, "|", imgSrc)
+		// If ID is empty, something went wrong
+		if id == "" {
+			fmt.Println("No ID found for the character:", name)
+			return
+		}
+
+		// Image
+		imgSrc := image.AttrOr("data-src", "")
+		imgSrc = strings.Replace(imgSrc, "/r/23x32", "", 1)
+		imgSrc = strings.TrimPrefix(imgSrc, "https://myanimelist.cdn-dena.com/images/characters/")
+		queryPos := strings.Index(imgSrc, "?s")
+
+		if queryPos != -1 {
+			imgSrc = imgSrc[:queryPos]
+		}
+
+		// Role
+		role := link.Next().Text()
+		role = strings.TrimSpace(role)
+		role = strings.ToLower(role)
+
+		// Create character
+		character := &mal.Character{
+			ID:        id,
+			Name:      name,
+			ImagePath: imgSrc,
+		}
+
+		characters = append(characters, character)
+
+		// Create anime relation
+		animeCharacter := &mal.AnimeCharacter{
+			ID:   id,
+			Role: role,
+		}
+
+		anime.Characters = append(anime.Characters, animeCharacter)
 	})
 
 	// Find ID
@@ -217,7 +247,7 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, error) {
 		}
 	})
 
-	return anime, nil
+	return anime, characters, nil
 }
 
 func darkTextValue(s *goquery.Selection) string {
