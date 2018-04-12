@@ -3,7 +3,7 @@ package mal
 import (
 	"encoding/xml"
 
-	"github.com/parnurzeal/gorequest"
+	"github.com/aerogo/http/client"
 )
 
 // AnimeList ...
@@ -15,14 +15,13 @@ type AnimeList struct {
 // GetAnimeList returns the user's anime list.
 func GetAnimeList(userName string) (*AnimeList, error) {
 	animeList := &AnimeList{}
+	response, err := client.Get("https://myanimelist.net/malappinfo.php?u=" + userName + "&status=all&type=anime").End()
 
-	_, body, errs := gorequest.New().Get("https://myanimelist.net/malappinfo.php?u=" + userName + "&status=all&type=anime").EndBytes()
-
-	if len(errs) > 0 {
-		return nil, errs[0]
+	if err != nil {
+		return nil, err
 	}
 
-	err := xml.Unmarshal(body, &animeList)
+	err = xml.Unmarshal(response.Bytes(), &animeList)
 
 	if err != nil {
 		return nil, err
