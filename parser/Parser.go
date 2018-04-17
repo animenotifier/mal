@@ -77,6 +77,10 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 			imgSrc = imgSrc[:queryPos]
 		}
 
+		if strings.Contains(imgSrc, "questionmark") {
+			imgSrc = ""
+		}
+
 		// Role
 		role := link.Next().Text()
 		role = strings.TrimSpace(role)
