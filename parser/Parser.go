@@ -115,6 +115,11 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 	// Find image from og:image tag
 	document.Find("meta[property='og:image']").Each(func(i int, s *goquery.Selection) {
 		imageURL := s.AttrOr("content", "")
+
+		if !strings.Contains(imageURL, "/images/anime/") || strings.Contains(imageURL, "/icon/") {
+			return
+		}
+
 		imageURL = strings.Replace(imageURL, ".jpg", "l.jpg", 1)
 		anime.Image = imageURL
 	})
