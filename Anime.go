@@ -7,6 +7,7 @@ type Anime struct {
 	Title          string
 	EnglishTitle   string
 	JapaneseTitle  string
+	Image          string
 	Synonyms       []string
 	Synopsis       string
 	Rating         string
