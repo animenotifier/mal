@@ -52,7 +52,7 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 
 		// ID, link and name
 		link := info.Find("a")
-		name := link.Text()
+		name := strings.TrimSpace(link.Text())
 		url := link.AttrOr("href", "")
 		id := strings.TrimPrefix(url, "https://myanimelist.net/character/")
 		slashPos := strings.Index(id, "/")
