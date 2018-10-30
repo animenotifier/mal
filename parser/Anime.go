@@ -88,9 +88,9 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 
 		// Create character
 		character := &mal.Character{
-			ID:        id,
-			Name:      name,
-			ImagePath: imgSrc,
+			ID:    id,
+			Name:  name,
+			Image: imgSrc,
 		}
 
 		characters = append(characters, character)
