@@ -13,7 +13,7 @@ import (
 )
 
 func TestParseCharacter(t *testing.T) {
-	response, err := client.Get("https://myanimelist.net/character/117909").End()
+	response, err := client.Get("https://myanimelist.net/character/63").End()
 	assert.NoError(t, err)
 
 	character, err := malparser.ParseCharacter(bytes.NewReader(response.Bytes()))

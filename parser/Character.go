@@ -71,11 +71,30 @@ func ParseCharacter(htmlReader io.Reader) (*mal.Character, error) {
 func getDescription(s *goquery.Selection) string {
 	description := bytes.Buffer{}
 
+	lastWasElementNode := false
+
 	s.Contents().Each(func(i int, s *goquery.Selection) {
-		if goquery.NodeName(s) == "#text" {
+		switch goquery.NodeName(s) {
+		case "#text":
+			text := strings.TrimSpace(s.Text())
+
+			if !lastWasElementNode {
+				description.WriteByte('\n')
+			}
+
+			description.WriteString(text)
+			lastWasElementNode = false
+
+		case "b", "i", "em", "strong":
 			text := strings.TrimSpace(s.Text())
 			description.WriteString(text)
-			description.WriteByte('\n')
+			lastWasElementNode = true
+
+		case "div":
+			if s.AttrOr("class", "") == "spoiler" {
+				text := strings.TrimSpace(s.Text())
+				description.WriteString(text)
+			}
 		}
 	})
 
