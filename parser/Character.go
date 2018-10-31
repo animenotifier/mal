@@ -79,5 +79,11 @@ func getDescription(s *goquery.Selection) string {
 		}
 	})
 
-	return strings.TrimSpace(description.String())
+	finalDescription := strings.TrimSpace(description.String())
+
+	if finalDescription == "No biography written." {
+		finalDescription = ""
+	}
+
+	return finalDescription
 }
