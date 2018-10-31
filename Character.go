@@ -8,6 +8,7 @@ type Character struct {
 	Name         string
 	JapaneseName string
 	Description  string
+	Spoilers     []string
 	// AlternateName string
 	// VoiceActors   []*Person
 }

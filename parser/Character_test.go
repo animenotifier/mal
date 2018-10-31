@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/aerogo/http/client"
-	"github.com/animenotifier/arn/stringutils"
 
 	"github.com/animenotifier/mal/parser"
 
@@ -18,5 +17,6 @@ func TestParseCharacter(t *testing.T) {
 
 	character, err := malparser.ParseCharacter(bytes.NewReader(response.Bytes()))
 	assert.NoError(t, err)
-	stringutils.PrettyPrint(character)
+	assert.Equal(t, "Winry Rockbell", character.Name)
+	// stringutils.PrettyPrint(character)
 }

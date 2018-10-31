@@ -42,6 +42,7 @@ func ParseCharacter(htmlReader io.Reader) (*mal.Character, error) {
 
 	// Description
 	character.Description = getDescription(rightColumn)
+	character.Spoilers = getSpoilers(rightColumn)
 
 	// Find image from og:image tag
 	s = document.Find("meta[property='og:image']").First()
@@ -68,41 +69,46 @@ func ParseCharacter(htmlReader io.Reader) (*mal.Character, error) {
 	return character, nil
 }
 
-func getDescription(s *goquery.Selection) string {
-	description := bytes.Buffer{}
+func getSpoilers(s *goquery.Selection) []string {
+	spoilers := []string{}
 
-	lastWasElementNode := false
+	s.Find(".spoiler_content").Each(func(i int, s *goquery.Selection) {
+		spoiler := getFlatText(s)
+		spoilers = append(spoilers, spoiler)
+	})
+
+	return spoilers
+}
+
+func getDescription(s *goquery.Selection) string {
+	description := getFlatText(s)
+
+	if description == "No biography written." {
+		description = ""
+	}
+
+	return description
+}
+
+// getFlatText returns the text of a node using only top-level children (no recursion).
+// It additionally handles cases for inline formatting elements.
+func getFlatText(s *goquery.Selection) string {
+	description := bytes.Buffer{}
 
 	s.Contents().Each(func(i int, s *goquery.Selection) {
 		switch goquery.NodeName(s) {
 		case "#text":
-			text := strings.TrimSpace(s.Text())
-
-			if !lastWasElementNode {
-				description.WriteByte('\n')
-			}
-
+			text := s.Text()
 			description.WriteString(text)
-			lastWasElementNode = false
 
 		case "b", "i", "em", "strong":
 			text := strings.TrimSpace(s.Text())
 			description.WriteString(text)
-			lastWasElementNode = true
-
-		case "div":
-			if s.AttrOr("class", "") == "spoiler" {
-				text := strings.TrimSpace(s.Text())
-				description.WriteString(text)
-			}
 		}
 	})
 
-	finalDescription := strings.TrimSpace(description.String())
-
-	if finalDescription == "No biography written." {
-		finalDescription = ""
-	}
-
-	return finalDescription
+	result := description.String()
+	result = strings.Replace(result, "\n\n\n", "\n\n", -1)
+	result = strings.TrimSpace(result)
+	return result
 }
