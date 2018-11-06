@@ -14,7 +14,7 @@ import (
 )
 
 // AnimeList is just a slice of anime list items.
-type AnimeList []AnimeListItem
+type AnimeList []*AnimeListItem
 
 // GetAnimeList returns the user's anime list.
 func GetAnimeList(userName string) (AnimeList, error) {

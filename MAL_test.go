@@ -25,6 +25,7 @@ func testUser(t *testing.T, userName string) {
 	assert.NotEmpty(t, animeList)
 
 	for _, item := range animeList {
+		assert.NotNil(t, item)
 		assert.True(t, item.AnimeID > 0)
 		assert.True(t, item.NumWatchedEpisodes >= 0)
 		assert.True(t, item.Score >= 0)
