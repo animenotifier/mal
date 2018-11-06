@@ -7,17 +7,31 @@ import (
 )
 
 func TestAnimeList(t *testing.T) {
-	animeList, err := GetAnimeList("Aky")
+	userNames := []string{
+		"Aky",
+		"soory",
+		"Subpyro",
+	}
+
+	for _, userName := range userNames {
+		testUser(t, userName)
+	}
+}
+
+func testUser(t *testing.T, userName string) {
+	animeList, err := GetAnimeList(userName)
 
 	assert.NoError(t, err)
-	assert.NotNil(t, animeList)
-	assert.NotEmpty(t, animeList.Items)
+	assert.NotEmpty(t, animeList)
 
-	for _, item := range animeList.Items {
-		assert.NotEmpty(t, item.AnimeID)
+	for _, item := range animeList {
+		assert.True(t, item.AnimeID > 0)
+		assert.True(t, item.NumWatchedEpisodes >= 0)
+		assert.True(t, item.Score >= 0)
+		assert.True(t, item.Score <= 10)
 
-		// MyStatus can only be one of the given values
-		switch item.MyStatus {
+		// Status can only be one of the given values
+		switch item.Status {
 		case AnimeListStatusWatching:
 		case AnimeListStatusCompleted:
 		case AnimeListStatusPlanned:

@@ -1,38 +1,41 @@
 package mal
 
-// AnimeListStatus values for anime list items
-const (
-	AnimeListStatusWatching  = "1"
-	AnimeListStatusCompleted = "2"
-	AnimeListStatusPlanned   = "6"
-	AnimeListStatusHold      = "3"
-	AnimeListStatusDropped   = "4"
-)
+import "fmt"
 
-// AnimeListItem ...
+// AnimeListItem represents a single list item.
 type AnimeListItem struct {
-	AnimeID           string        `json:"series_animedb_id" xml:"series_animedb_id"`
-	AnimeTitle        string        `json:"series_title" xml:"series_title"`
-	AnimeSynonyms     string        `json:"series_synonyms" xml:"series_synonyms"`
-	AnimeType         string        `json:"series_type" xml:"series_type"`
-	AnimeEpisodes     string        `json:"series_episodes" xml:"series_episodes"`
-	AnimeStatus       string        `json:"series_status" xml:"series_status"`
-	AnimeStart        string        `json:"series_start" xml:"series_start"`
-	AnimeEnd          string        `json:"series_end" xml:"series_end"`
-	AnimeImage        string        `json:"series_image" xml:"series_image"`
-	MyID              string        `json:"my_id" xml:"my_id"`
-	MyWatchedEpisodes string        `json:"my_watched_episodes" xml:"my_watched_episodes"`
-	MyStartDate       string        `json:"my_start_date" xml:"my_start_date"`
-	MyFinishDate      string        `json:"my_finish_date" xml:"my_finish_date"`
-	MyScore           string        `json:"my_score" xml:"my_score"`
-	MyStatus          string        `json:"my_status" xml:"my_status"`
-	MyRewatching      string        `json:"my_rewatching" xml:"my_rewatching"`
-	MyRewatchingEp    string        `json:"my_rewatching_ep" xml:"my_rewatching_ep"`
-	MyLastUpdated     string        `json:"my_last_updated" xml:"my_last_updated"`
-	MyTags            []interface{} `json:"my_tags" xml:"my_tags"`
+	AnimeID            int  `json:"anime_id"`
+	Status             int  `json:"status"`
+	Score              int  `json:"score"`
+	IsRewatching       bool `json:"is_rewatching"`
+	NumWatchedEpisodes int  `json:"num_watched_episodes"`
+
+	// Tags                  string      `json:"tags"`
+	// AnimeTitle            string      `json:"anime_title"`
+	// AnimeNumEpisodes      int         `json:"anime_num_episodes"`
+	// AnimeAiringStatus     int         `json:"anime_airing_status"`
+	// AnimeStudios          interface{} `json:"anime_studios"`
+	// AnimeLicensors        interface{} `json:"anime_licensors"`
+	// AnimeSeason           interface{} `json:"anime_season"`
+	// HasEpisodeVideo       bool        `json:"has_episode_video"`
+	// HasPromotionVideo     bool        `json:"has_promotion_video"`
+	// HasVideo              bool        `json:"has_video"`
+	// VideoURL              string      `json:"video_url"`
+	// AnimeURL              string      `json:"anime_url"`
+	// AnimeImagePath        string      `json:"anime_image_path"`
+	// IsAddedToList         bool        `json:"is_added_to_list"`
+	// AnimeMediaTypeString  string      `json:"anime_media_type_string"`
+	// AnimeMpaaRatingString string      `json:"anime_mpaa_rating_string"`
+	// StartDateString       interface{} `json:"start_date_string"`
+	// FinishDateString      interface{} `json:"finish_date_string"`
+	// AnimeStartDateString  string      `json:"anime_start_date_string"`
+	// AnimeEndDateString    string      `json:"anime_end_date_string"`
+	// DaysString            interface{} `json:"days_string"`
+	// StorageString         string      `json:"storage_string"`
+	// PriorityString        string      `json:"priority_string"`
 }
 
 // AnimeLink ...
-func (item *AnimeListItem) AnimeLink() string {
-	return "https://myanimelist.net/anime/" + item.AnimeID
+func (item AnimeListItem) AnimeLink() string {
+	return fmt.Sprintf("https://myanimelist.net/anime/%d", item.AnimeID)
 }

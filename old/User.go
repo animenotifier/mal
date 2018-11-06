@@ -1,4 +1,4 @@
-package mal
+package old
 
 // User ...
 type User struct {
