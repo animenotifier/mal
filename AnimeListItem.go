@@ -4,14 +4,14 @@ import "fmt"
 
 // AnimeListItem represents a single list item.
 type AnimeListItem struct {
-	AnimeID            int  `json:"anime_id"`
-	Status             int  `json:"status"`
-	Score              int  `json:"score"`
-	IsRewatching       bool `json:"is_rewatching"`
-	NumWatchedEpisodes int  `json:"num_watched_episodes"`
+	AnimeID            int    `json:"anime_id"`
+	AnimeTitle         string `json:"anime_title"`
+	Status             int    `json:"status"`
+	Score              int    `json:"score"`
+	IsRewatching       bool   `json:"is_rewatching"`
+	NumWatchedEpisodes int    `json:"num_watched_episodes"`
 
 	// Tags                  string      `json:"tags"`
-	// AnimeTitle            string      `json:"anime_title"`
 	// AnimeNumEpisodes      int         `json:"anime_num_episodes"`
 	// AnimeAiringStatus     int         `json:"anime_airing_status"`
 	// AnimeStudios          interface{} `json:"anime_studios"`

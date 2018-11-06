@@ -29,6 +29,7 @@ func testUser(t *testing.T, userName string) {
 		assert.True(t, item.NumWatchedEpisodes >= 0)
 		assert.True(t, item.Score >= 0)
 		assert.True(t, item.Score <= 10)
+		assert.NotEmpty(t, item.AnimeTitle)
 
 		// Status can only be one of the given values
 		switch item.Status {
