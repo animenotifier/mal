@@ -2,6 +2,7 @@ package malparser
 
 import (
 	"bytes"
+	"html"
 	"io"
 	"regexp"
 	"strings"
@@ -27,7 +28,7 @@ func ParseCharacter(htmlReader io.Reader) (*mal.Character, error) {
 	// Find name from og:title tag
 	s := document.Find("meta[property='og:title']").First()
 	name := s.AttrOr("content", "")
-	character.Name = name
+	character.Name = html.UnescapeString(name)
 
 	// Find headers
 	rightColumn := document.Find("#content > table > tbody > tr > td").Last()
