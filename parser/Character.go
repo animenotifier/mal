@@ -84,7 +84,7 @@ func getSpoilers(s *goquery.Selection) []string {
 func getDescription(s *goquery.Selection) string {
 	description := getFlatText(s)
 
-	if strings.HasPrefix(description, "No biography written.") {
+	if strings.Contains(description, "No biography written.") {
 		description = ""
 	}
 
