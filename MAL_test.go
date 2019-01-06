@@ -11,6 +11,7 @@ func TestAnimeList(t *testing.T) {
 		"Aky",
 		"soory",
 		"Subpyro",
+		"PaladinRaid",
 	}
 
 	for _, userName := range userNames {
