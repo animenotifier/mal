@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -19,8 +18,10 @@ func getAnimeList(userName string, page int) (AnimeList, error) {
 	animeList := AnimeList{}
 
 	offset := page * 300
+
 	// Fetch the page
-	response, err := client.Get("https://myanimelist.net/animelist/" + userName + "/load.json?offset=" + strconv.Itoa(offset) + "&status=7").End()
+	url := fmt.Sprintf("https://myanimelist.net/animelist/%s/load.json?offset=%d&status=7", userName, offset)
+	response, err := client.Get(url).End()
 
 	if err != nil {
 		return nil, err
@@ -35,7 +36,8 @@ func getAnimeList(userName string, page int) (AnimeList, error) {
 		return nil, err
 	}
 
-	var dataItems = response.String()
+	dataItems := response.String()
+
 	// Fix is_rewatching field
 	dataItems = strings.Replace(dataItems, `"is_rewatching":""`, `"is_rewatching":false`, -1)
 	dataItems = strings.Replace(dataItems, `"is_rewatching":0`, `"is_rewatching":false`, -1)
@@ -53,7 +55,7 @@ func getAnimeList(userName string, page int) (AnimeList, error) {
 func GetAnimeList(userName string) (AnimeList, error) {
 	animeList := AnimeList{}
 	page := 0
-	ticker := time.NewTicker(500 * time.Millisecond)
+	ticker := time.NewTicker(1100 * time.Millisecond)
 	rateLimit := ticker.C
 	defer ticker.Stop()
 
