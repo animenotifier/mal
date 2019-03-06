@@ -131,13 +131,26 @@ func ParseAnime(htmlReader io.Reader) (*mal.Anime, []*mal.Character, error) {
 	// Find description from og:description tag
 	document.Find("meta[property='og:description']").Each(func(i int, s *goquery.Selection) {
 		synopsis := s.AttrOr("content", "")
-		matches := writtenByRegex.FindStringSubmatch(synopsis)
+
+		// Find source ("Source:")
+		matches := sourceRegex.FindStringSubmatch(synopsis)
 
 		if len(matches) >= 2 {
 			anime.SynopsisSource = matches[1]
 		}
 
+		// Find source ("Written by")
+		if anime.SynopsisSource == "" {
+			matches = writtenByRegex.FindStringSubmatch(synopsis)
+
+			if len(matches) >= 2 {
+				anime.SynopsisSource = matches[1]
+			}
+		}
+
+		// Remove source from synopsis
 		synopsis = writtenByRegex.ReplaceAllString(synopsis, "")
+		synopsis = sourceRegex.ReplaceAllString(synopsis, "")
 		synopsis = strings.TrimSpace(synopsis)
 		anime.Synopsis = synopsis
 
