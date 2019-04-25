@@ -9,8 +9,6 @@ import (
 func TestAnimeList(t *testing.T) {
 	userNames := []string{
 		"Aky",
-		"soory",
-		"Subpyro",
 		"PaladinRaid",
 	}
 
