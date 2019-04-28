@@ -2,7 +2,7 @@
 
 [![Godoc reference][godoc-image]][godoc-url]
 [![Go report card][goreportcard-image]][goreportcard-url]
-[![Tests][travis-image]][travis-url]
+[![Tests][tests-image]][tests-url]
 [![Code coverage][codecov-image]][codecov-url]
 [![License][license-image]][license-url]
 
@@ -18,8 +18,8 @@ MyAnimeList API client written in Go.
 [godoc-url]: https://godoc.org/github.com/animenotifier/mal
 [goreportcard-image]: https://goreportcard.com/badge/github.com/animenotifier/mal
 [goreportcard-url]: https://goreportcard.com/report/github.com/animenotifier/mal
-[travis-image]: https://travis-ci.org/animenotifier/mal.svg?branch=master
-[travis-url]: https://travis-ci.org/animenotifier/mal
+[tests-image]: https://cloud.drone.io/api/badges/animenotifier/mal/status.svg
+[tests-url]: https://cloud.drone.io/animenotifier/mal
 [codecov-image]: https://codecov.io/gh/animenotifier/mal/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/animenotifier/mal
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
