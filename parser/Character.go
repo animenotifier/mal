@@ -1,7 +1,6 @@
 package malparser
 
 import (
-	"bytes"
 	"html"
 	"io"
 	"regexp"
@@ -94,7 +93,7 @@ func getDescription(s *goquery.Selection) string {
 // getFlatText returns the text of a node using only top-level children (no recursion).
 // It additionally handles cases for inline formatting elements.
 func getFlatText(s *goquery.Selection) string {
-	description := bytes.Buffer{}
+	description := strings.Builder{}
 
 	s.Contents().Each(func(i int, s *goquery.Selection) {
 		switch goquery.NodeName(s) {

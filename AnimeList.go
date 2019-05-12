@@ -43,18 +43,29 @@ func GetAnimeList(userName string) (AnimeList, error) {
 
 // getAnimeListWithOffset returns the anime list items starting with the given offset.
 func getAnimeListWithOffset(userName string, offset int) (AnimeList, error) {
+	var response *client.Response
+	var err error
 	animeList := AnimeList{}
 
 	// Fetch the page
-	url := fmt.Sprintf("https://myanimelist.net/animelist/%s/load.json?offset=%d&status=7", userName, offset)
-	response, err := client.Get(url).End()
+	for {
+		url := fmt.Sprintf("https://myanimelist.net/animelist/%s/load.json?offset=%d&status=7", userName, offset)
+		response, err = client.Get(url).End()
 
-	if err != nil {
-		return nil, err
-	}
+		if err != nil {
+			return nil, err
+		}
 
-	if response.StatusCode() != http.StatusOK {
-		return nil, fmt.Errorf("Status code: %d", response.StatusCode())
+		if !response.Ok() {
+			if response.StatusCode() == http.StatusTooManyRequests {
+				time.Sleep(time.Second)
+				continue
+			}
+
+			return nil, fmt.Errorf("Status code: %d", response.StatusCode())
+		}
+
+		break
 	}
 
 	// Get JSON string
