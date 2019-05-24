@@ -9,7 +9,6 @@ import (
 func TestAnimeList(t *testing.T) {
 	userNames := []string{
 		"Aky",
-		"PaladinRaid",
 	}
 
 	for _, userName := range userNames {
