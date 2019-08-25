@@ -72,12 +72,16 @@ func getAnimeListWithOffset(userName string, offset int) (AnimeList, error) {
 	dataItems := response.String()
 
 	// Fix is_rewatching field
-	dataItems = strings.Replace(dataItems, `"is_rewatching":""`, `"is_rewatching":false`, -1)
-	dataItems = strings.Replace(dataItems, `"is_rewatching":0`, `"is_rewatching":false`, -1)
-	dataItems = strings.Replace(dataItems, `"is_rewatching":1`, `"is_rewatching":true`, -1)
+	dataItems = strings.ReplaceAll(dataItems, `"is_rewatching":""`, `"is_rewatching":false`)
+	dataItems = strings.ReplaceAll(dataItems, `"is_rewatching":0`, `"is_rewatching":false`)
+	dataItems = strings.ReplaceAll(dataItems, `"is_rewatching":1`, `"is_rewatching":true`)
+
+	// Fix anime_title field sometimes including numbers instead of strings
+	dataItems = strings.ReplaceAll(dataItems, `"anime_title":1`, `"anime_title":"1"`)
 
 	// Parse JSON
 	err = jsoniter.UnmarshalFromString(dataItems, &animeList)
+	fmt.Println(err)
 
 	if err != nil {
 		return nil, err

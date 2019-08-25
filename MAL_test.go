@@ -18,7 +18,6 @@ func TestAnimeList(t *testing.T) {
 
 func testUser(t *testing.T, userName string) {
 	animeList, err := GetAnimeList(userName)
-
 	assert.Nil(t, err)
 	assert.NotEqual(t, len(animeList), 0)
 
