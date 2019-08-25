@@ -3,7 +3,7 @@ package mal
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/akyoto/assert"
 )
 
 func TestAnimeList(t *testing.T) {
@@ -19,8 +19,8 @@ func TestAnimeList(t *testing.T) {
 func testUser(t *testing.T, userName string) {
 	animeList, err := GetAnimeList(userName)
 
-	assert.NoError(t, err)
-	assert.NotEmpty(t, animeList)
+	assert.Nil(t, err)
+	assert.NotEqual(t, len(animeList), 0)
 
 	for _, item := range animeList {
 		assert.NotNil(t, item)
@@ -28,7 +28,7 @@ func testUser(t *testing.T, userName string) {
 		assert.True(t, item.NumWatchedEpisodes >= 0)
 		assert.True(t, item.Score >= 0)
 		assert.True(t, item.Score <= 10)
-		assert.NotEmpty(t, item.AnimeTitle)
+		assert.NotEqual(t, item.AnimeTitle, "")
 
 		// Status can only be one of the given values
 		switch item.Status {
